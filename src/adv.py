@@ -1,4 +1,9 @@
 from room import Room
+from player import Player
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.parse_args()
 
 # Declare all the rooms
 
@@ -37,7 +42,38 @@ room['treasure'].s_to = room['narrow']
 # Main
 #
 
+def menu():
+    print("To move, type 'n', 's', 'e', or 'w'.")
+    print(" ")
+    print("To see this menu again, type 'h'.")
+    print(" ")
+    print("To Quit game, type 'q'.")
+    
+print("Welcome to the Adventure Game!")
+print(" ")
+menu()
+
+direction_abbreviations = {
+    "n": "north",
+    "s": "south",
+    "e": "east",
+    "w": "west",
+    "u": "up",
+    "d": "down"
+}
+
+direction_adj_phrase = {
+    "n": "to the north",
+    "s": "to the south",
+    "e": "to the east",
+    "w": "to the west",
+    "u": "above",
+    "d": "below"
+}
+
 # Make a new player object that is currently in the 'outside' room.
+
+player = Player(room['outside'], "Adventurer #1")
 
 # Write a loop that:
 #
@@ -49,3 +85,29 @@ room['treasure'].s_to = room['narrow']
 # Print an error message if the movement isn't allowed.
 #
 # If the user enters "q", quit the game.
+
+while True:
+    current_room = player.get_location()
+    user_input = input("> ").lower()
+    input_words = user_input.strip().split(" ")
+    
+    if (user_input == 'q'):
+        break
+
+    elif (user_input == 'h'):
+        menu()
+
+    elif (user_input in direction_abbreviations):
+
+        
+        next_room = current_room.get_next_room(user_input)
+
+        if next_room:
+            player.move_to_location(next_room)
+            print("You move " + direction_abbreviations[user_input] + ".")
+            next_room.describe()
+        else:
+            print("There is no exit " + direction_adj_phrase[user_input] + " from here.")
+
+    # else (user_input = )
+    #     print("Invalid input!")
